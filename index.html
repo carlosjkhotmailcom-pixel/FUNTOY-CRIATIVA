@@ -1,94 +1,300 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Polaroid Print</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f1ec;color:#222}
-header{padding:18px;text-align:center;background:#111;color:white}header h1{margin:0;font-size:24px}
-main{max-width:1050px;margin:auto;padding:16px;display:grid;grid-template-columns:330px 1fr;gap:18px}
-.panel,.paper{background:white;border-radius:18px;padding:16px;box-shadow:0 5px 22px #0001}
-label{display:block;font-weight:700;margin:12px 0 6px}
-button,input,select{width:100%;padding:11px;border-radius:10px;border:1px solid #ccc;font-size:16px}
-button{background:#111;color:white;border:0;font-weight:700;cursor:pointer;margin-top:8px}
-button.secondary{background:#eee;color:#222}.row{display:flex;gap:8px}.row>*{flex:1}
-#camera{width:100%;aspect-ratio:4/3;background:#222;border-radius:12px;object-fit:cover}
-#paper{min-height:500px;display:grid;place-items:center;background:#eee}
-.sheet{background:#fff;padding:20px;display:grid;gap:18px;max-width:100%;width:min(700px,100%);box-shadow:0 3px 15px #0002}
-.photo{background:#fff;padding:10px 10px 42px;box-shadow:0 2px 8px #0003;position:relative;overflow:hidden}
-.photo img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-.caption{position:absolute;bottom:9px;left:10px;right:10px;text-align:center;font-size:15px}
-.time{font-size:11px;opacity:.7}
-@media(max-width:800px){main{grid-template-columns:1fr}.panel{order:2}.paper{order:1}}
-@media print{
- header,.panel{display:none!important}body{background:white}.paper{box-shadow:none;padding:0}.sheet{box-shadow:none;width:100%;max-width:none}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUNTOY & CRIATIVA</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+        }
+
+        /* Título Colorido */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff007f, #ff5722, #ffeb3b, #4caf50, #00bcd4, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        /* Área do Vídeo / Câmera */
+        .camera-box {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            height: 240px;
+            margin: 0 auto 15px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Contagem Regressiva Sobreposta */
+        #countdown {
+            position: absolute;
+            font-size: 80px;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 3px 3px 5px #000;
+            display: none;
+        }
+
+        /* Painel de Opções */
+        .controls {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            margin: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-capture {
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            width: 80%;
+            font-size: 1.2rem;
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+
+        /* Estilo da Foto Polaroid */
+        .polaroid-frame {
+            background: #fff;
+            padding: 15px 15px 40px 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 5px;
+            margin: 20px auto;
+            display: inline-block;
+            max-width: 100%;
+            position: relative;
+        }
+
+        /* Cores de Molduras */
+        .theme-pikachu { background-color: #ffeb3b; border: 4px solid #fbc02d; }
+        .theme-naruto { background-color: #ff9800; border: 4px solid #e65100; }
+        .theme-goku { background-color: #2196f3; border: 4px solid #0d47a1; }
+        .theme-sakura { background-color: #ff80ab; border: 4px solid #c2185b; }
+
+        .photo-grid {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: 1fr; }
+        .grid-3 { grid-template-columns: 1fr 1fr; }
+        .grid-4 { grid-template-columns: 1fr 1fr; }
+
+        .photo-item {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border: 2px solid #333;
+            background: #eee;
+        }
+
+        .polaroid-footer {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #resultArea {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<header><h1>📸 Polaroid Print</h1><div>Foto instantânea • data/hora • texto • impressão</div></header>
-<main>
-<section class="panel">
-<video id="camera" autoplay playsinline></video>
-<div class="row">
-<button id="start">📷 Abrir câmera</button>
-<button id="shot" class="secondary">Capturar</button>
-</div>
-<input id="file" type="file" accept="image/*" capture="environment" style="margin-top:8px">
-<label>Fotos na folha</label>
-<select id="layout"><option value="1">1 foto</option><option value="2">2 fotos</option><option value="3">3 fotos</option><option value="4">4 fotos</option></select>
-<label>Texto da foto</label>
-<input id="text" placeholder="Ex.: Funtoy • Sobral">
-<label>Mostrar data e hora</label>
-<select id="showtime"><option value="yes">Sim</option><option value="no">Não</option></select>
-<label>Formato da folha</label>
-<select id="size"><option value="a4">A4</option><option value="10x15">10 × 15 cm</option></select>
-<button id="print">🖨️ Imprimir</button>
-<button id="clear" class="secondary">Limpar fotos</button>
-</section>
-<section class="paper"><div id="paper"></div></section>
-</main>
-<script>
-const video=document.querySelector('#camera'), paper=document.querySelector('#paper');
-const photos=[], file=document.querySelector('#file');
-let stream=null;
-async function startCamera(){
- try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});video.srcObject=stream}
- catch(e){alert('Não foi possível abrir a câmera. Você pode escolher uma foto pelo botão de arquivo.')}
-}
-document.querySelector('#start').onclick=startCamera;
-document.querySelector('#shot').onclick=()=>{
- if(!video.srcObject){alert('Abra a câmera primeiro.');return}
- const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;
- c.getContext('2d').drawImage(video,0,0);addPhoto(c.toDataURL('image/jpeg',.92));
-};
-file.onchange=()=>{const f=file.files[0];if(!f)return;const r=new FileReader();r.onload=()=>addPhoto(r.result);r.readAsDataURL(f)};
-function addPhoto(src){photos.push(src); if(photos.length>4)photos.shift();render()}
-function render(){
- paper.innerHTML='';
- const n=+document.querySelector('#layout').value;
- const sheet=document.createElement('div');sheet.className='sheet';
- sheet.style.gridTemplateColumns=n===1?'1fr':n===2?'repeat(2,1fr)':n===3?'repeat(3,1fr)':'repeat(2,1fr)';
- const text=document.querySelector('#text').value;
- const show=document.querySelector('#showtime').value==='yes';
- for(let i=0;i<n;i++){
-   const p=document.createElement('div');p.className='photo';
-   const img=document.createElement('img');img.src=photos[i%photos.length]||placeholder();
-   p.appendChild(img);
-   const cap=document.createElement('div');cap.className='caption';
-   cap.innerHTML=(text?escapeHtml(text)+'<br>':'')+(show?'<span class="time">'+new Date().toLocaleString('pt-BR')+'</span>':'');
-   p.appendChild(cap);sheet.appendChild(p);
- }
- paper.appendChild(sheet);
-}
-function placeholder(){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"><rect width="100%" height="100%" fill="#ddd"/><text x="50%" y="50%" text-anchor="middle" font-size="28" fill="#777">Sua foto aqui</text></svg>')}
-function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-document.querySelector('#layout').onchange=render;
-document.querySelector('#text').oninput=render;
-document.querySelector('#showtime').onchange=render;
-document.querySelector('#print').onclick=()=>window.print();
-document.querySelector('#clear').onclick=()=>{photos.length=0;render()};
-render();
-</script>
-</body></html>
+
+    <div class="container">
+        <!-- Título -->
+        <h1>FUNTOY & CRIATIVA</h1>
+
+        <!-- Tela da Câmera -->
+        <div id="cameraArea">
+            <div class="camera-box">
+                <video id="video" autoplay playsinline></video>
+                <div id="countdown">3</div>
+            </div>
+
+            <div class="controls">
+                <label for="photoCount">Quantidade de Fotos:</label>
+                <select id="photoCount">
+                    <option value="1">1 Foto</option>
+                    <option value="2">2 Fotos</option>
+                    <option value="3">3 Fotos</option>
+                    <option value="4">4 Fotos</option>
+                </select>
+
+                <label for="themeSelect">Borda Anime:</label>
+                <select id="themeSelect">
+                    <option value="theme-pikachu">⚡ Amarelo (Pikachu)</option>
+                    <option value="theme-naruto">🟠 Laranja (Naruto)</option>
+                    <option value="theme-goku">🔵 Azul (Goku)</option>
+                    <option value="theme-sakura">🌸 Rosa (Sakura)</option>
+                </select>
+
+                <br><br>
+                <button class="btn-capture" onclick="startCaptureSequence()">📸 TIRAR FOTO</button>
+            </div>
+        </div>
+
+        <!-- Tela de Resultado / Polaroid -->
+        <div id="resultArea">
+            <h3>Sua Polaroid ficou assim!</h3>
+            
+            <div id="polaroidCard" class="polaroid-frame theme-pikachu">
+                <div id="photoGrid" class="photo-grid grid-1">
+                    <!-- Fotos capturadas entram aqui -->
+                </div>
+                <div class="polaroid-footer" id="polaroidText">
+                    FUNTOY & CRIATIVA ✨
+                </div>
+            </div>
+
+            <br>
+            <button class="btn-delete" onclick="resetCamera()">🗑️ Não Gostei / Apagar e Começar de Novo</button>
+        </div>
+    </div>
+
+    <!-- Canvas invisível para processar as fotos -->
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const countdownEl = document.getElementById('countdown');
+        const cameraArea = document.getElementById('cameraArea');
+        const resultArea = document.getElementById('resultArea');
+        const photoGrid = document.getElementById('photoGrid');
+        const polaroidCard = document.getElementById('polaroidCard');
+        const canvas = document.getElementById('canvas');
+
+        let photos = [];
+
+        // Iniciar Câmera do Dispositivo
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => { alert("Erro ao acessar a câmera: " + err); });
+
+        // Função para Iniciar a Sequência de Fotos
+        function startCaptureSequence() {
+            const count = parseInt(document.getElementById('photoCount').value);
+            photos = []; // Limpa fotos anteriores
+            captureLoop(0, count);
+        }
+
+        // Loop com Contagem Regressiva (3, 2, 1)
+        function captureLoop(current, total) {
+            if (current >= total) {
+                showResult();
+                return;
+            }
+
+            let timer = 3;
+            countdownEl.style.display = 'block';
+            countdownEl.innerText = timer;
+
+            let interval = setInterval(() => {
+                timer--;
+                if (timer > 0) {
+                    countdownEl.innerText = timer;
+                } else {
+                    clearInterval(interval);
+                    countdownEl.style.display = 'none';
+                    takePhoto();
+                    // Pequena pausa antes de tirar a próxima
+                    setTimeout(() => {
+                        captureLoop(current + 1, total);
+                    }, 1000);
+                }
+            }, 1000);
+        }
+
+        // Tira uma foto e salva no array
+        function takePhoto() {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth || 320;
+            canvas.height = video.videoHeight || 240;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            photos.push(canvas.toDataURL('image/png'));
+        }
+
+        // Exibe o Resultado na Polaroid
+        function showResult() {
+            cameraArea.style.display = 'none';
+            resultArea.style.display = 'block';
+
+            // Configura a borda/tema escolhido
+            const selectedTheme = document.getElementById('themeSelect').value;
+            polaroidCard.className = 'polaroid-frame ' + selectedTheme;
+
+            // Configura a grade das fotos
+            photoGrid.className = 'photo-grid grid-' + photos.length;
+            photoGrid.innerHTML = '';
+
+            // Adiciona as imagens capturadas
+            photos.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'photo-item';
+                photoGrid.appendChild(img);
+            });
+        }
+
+        // Apaga e Recomeça
+        function resetCamera() {
+            photos = [];
+            resultArea.style.display = 'none';
+            cameraArea.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
